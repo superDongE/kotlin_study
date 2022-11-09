@@ -1,5 +1,6 @@
 import kotlinx.coroutines.*
 import java.lang.System.currentTimeMillis
+import kotlin.concurrent.timer
 
 /*
 fun main(args: Array<String>) {
@@ -199,7 +200,7 @@ fun main() {
     delay(100)
     squarePrinter.cancel()
 }*/
-suspend fun main() {
+/*suspend fun main() {
     val squarePrinter = GlobalScope.launch(Dispatchers.Default) {
         var i = 1
         while (true) {
@@ -210,4 +211,79 @@ suspend fun main() {
 
     delay(100)
     squarePrinter.cancel()
+}*/
+
+/*fun main() {
+    runBlocking {
+        launch {
+            throw Exception("Error Task A")
+            println("Task A completed")
+        }
+
+        launch {
+            delay(1000)
+            println("Task B completed")
+        }
+
+        println("Root")
+    }
+}*/
+
+/*suspend fun main() {
+    val handler = CoroutineExceptionHandler { _, throwable ->
+        println("throwable : $throwable")
+    }
+
+    GlobalScope.launch(handler) {
+        launch {
+            throw Exception("Error Task A")
+            println("Task A completed")
+        }
+
+        launch {
+            delay(1000)
+            println("Task B completed")
+        }
+
+        println("Root")
+    }.join()
+}*/
+
+/*fun main() {
+    runBlocking {
+        supervisorScope {
+            val deferredA = async {
+                throw Exception("Error in Task A")
+                println("Task A completed")
+            }
+
+            val deferredB = async {
+                println("Task B completed")
+            }
+
+            try {
+                deferredA.await()
+            } catch (e: Exception) {
+                println("Caught : $e")
+            }
+            deferredB.await()
+            println("Root")
+        }
+
+
+    }
+}*/
+
+fun main() {
+    println("Starting a thread ...")
+    var counter = 0
+
+    kotlin.concurrent.timer(period = 150, name = "Worker", daemon = true) {
+        println("${Thread.currentThread().name} : ${counter++}")
+    }
+
+    Thread.sleep(500)
+    println("Shutting down ...")
 }
+
+
